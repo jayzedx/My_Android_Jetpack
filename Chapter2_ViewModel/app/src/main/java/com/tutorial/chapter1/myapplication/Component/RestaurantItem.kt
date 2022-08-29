@@ -27,6 +27,7 @@ fun RestaurantItem(item: Restaurant) {
                 item.title, item.description,
                 Modifier.weight(0.85f)
             )
+            FavoriteIcon(Modifier.weight(0.15f))
         }
     }
 }
