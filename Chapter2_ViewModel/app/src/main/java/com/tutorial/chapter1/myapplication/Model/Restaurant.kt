@@ -1,6 +1,6 @@
 package com.tutorial.chapter1.myapplication.Model
 
-data class Restaurant(val id: Int, val title: String, val description: String)
+data class Restaurant(val id: Int, val title: String, val description: String, var isFavorite: Boolean = false)
 
 val dummyRestaurants = listOf(
     Restaurant(0, "Alfredo foods", "At Alfredo's …"),
