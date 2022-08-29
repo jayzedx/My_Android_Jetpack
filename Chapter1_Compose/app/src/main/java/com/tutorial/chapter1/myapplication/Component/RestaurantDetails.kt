@@ -10,10 +10,10 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 
 @Composable
-fun RestaurantDetails(modifier: Modifier) {
+fun RestaurantDetails(title: String, description: String, modifier: Modifier) {
     Column(modifier = modifier) {
         Text(
-            text = "Alfredo's dishes",
+            text = title,
             style = MaterialTheme.typography.h6
         )
         CompositionLocalProvider(
@@ -21,7 +21,7 @@ fun RestaurantDetails(modifier: Modifier) {
                     ContentAlpha.medium
         ) {
             Text(
-                text = "At Alfredo's … seafood dishes.",
+                text = description,
                 style = MaterialTheme.typography.body2
             )
         }

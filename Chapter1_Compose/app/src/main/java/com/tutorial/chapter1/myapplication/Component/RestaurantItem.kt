@@ -9,10 +9,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.tutorial.chapter1.myapplication.Model.Restaurant
 
 
 @Composable
-fun RestaurantItem() {
+fun RestaurantItem(item: Restaurant) {
     Card(
         elevation = 8.dp,
         modifier = Modifier.padding(8.dp)
@@ -22,7 +23,10 @@ fun RestaurantItem() {
             modifier = Modifier.padding(8.dp)
         ) {
             RestaurantIcon(Icons.Filled.Place, Modifier.weight(0.15f))
-            RestaurantDetails(Modifier.weight(0.85f))
+            RestaurantDetails(
+                item.title, item.description,
+                Modifier.weight(0.85f)
+            )
         }
     }
 }
