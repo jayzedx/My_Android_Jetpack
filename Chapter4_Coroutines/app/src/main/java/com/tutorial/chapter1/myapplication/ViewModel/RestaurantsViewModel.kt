@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.tutorial.chapter1.myapplication.Model.Restaurant
 import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
 import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -24,6 +25,10 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
     val state: MutableState<List<Restaurant>> = mutableStateOf(emptyList<Restaurant>())
 
+    //coroutines, async with io thread
+    val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.IO)
+
     init {
         val retrofit: Retrofit = Retrofit.Builder()
             //explicitly tell Retrofit that we want the JSON to be deserialized with the GSON converter, following the @Serialized
@@ -37,24 +42,13 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     }
 
     fun getRestaurants() {
-        // occurred error from executing from main thread
-        // because execute() will run synchronous on main thread
-        //        restInterface.getRestaurants().execute().body()?.let { restaurants ->
-        //            state.value = restaurants.restoreSelections()
-        //        }
-        restaurantsCall = restInterface.getRestaurants()
-        restaurantsCall.enqueue(
-            object : Callback<List<Restaurant>> {
-                override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
-                    response.body()?.let { restaurants ->
-                        state.value = restaurants.restoreSelections()
-                    }
-                }
-                override fun onFailure(call: Call<List<Restaurant>>, t: Throwable) {
-                    t.printStackTrace()
-                }
-            })
-
+       scope.launch {
+           val restaurants = restInterface.getRestaurants()
+           //specific that works on main thread
+           withContext(Dispatchers.Main) {
+               state.value = restaurants.restoreSelections()
+           }
+        }
     }
 
     fun toggleFavorite(id: Int) {
@@ -91,7 +85,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
     override fun onCleared() {
         super.onCleared()
-        restaurantsCall.cancel()
+        job.cancel()
     }
 
 

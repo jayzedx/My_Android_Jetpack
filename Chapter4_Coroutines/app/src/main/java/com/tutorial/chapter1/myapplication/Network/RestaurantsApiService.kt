@@ -8,7 +8,8 @@ import retrofit2.http.POST
 
 interface RestaurantsApiService {
     @GET("restaurants.json")
-    fun getRestaurants(): Call<List<Restaurant>>
+//  use coroutines instead of callbacks
+    suspend fun getRestaurants() : List<Restaurant>
 
 //    @POST("user/edit")
 //    fun updateUser(@Field("first_name") firstName: String): Call<User>
