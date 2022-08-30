@@ -46,9 +46,15 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         //getRestaurants()
     }
 
+    private suspend fun getRemoteRestaurants() : List<Restaurant> {
+        return withContext(Dispatchers.IO) {
+            restInterface.getRestaurants()
+        }
+    }
+
     fun getRestaurants() {
-        viewModelScope.launch(Dispatchers.IO + errorHandler) {
-            val restaurants = restInterface.getRestaurants()
+        viewModelScope.launch(errorHandler) {
+            val restaurants = getRemoteRestaurants()
             //specific that works on main thread
             withContext(Dispatchers.Main) {
                 state.value = restaurants.restoreSelections()
