@@ -31,6 +31,9 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             .baseUrl("https://restaurants-827eb-default-rtdb.firebaseio.com/")
             .build()
         restInterface = retrofit.create(RestaurantsApiService::class.java)
+
+        //triggering network requests for preventing side effect from recomposition (alternative)
+        //getRestaurants()
     }
 
     fun getRestaurants() {
