@@ -29,7 +29,7 @@ fun RestaurantScreen() {
     //    }
 
     val viewModel: RestaurantsViewModel = viewModel()
-
+    viewModel.getRestaurants()
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         items(viewModel.state.value) { restaurant ->
             RestaurantItem(restaurant) { id ->

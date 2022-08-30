@@ -1,6 +1,15 @@
 package com.tutorial.chapter1.myapplication.Model
+import com.google.gson.annotations.SerializedName
 
-data class Restaurant(val id: Int, val title: String, val description: String, var isFavorite: Boolean = false)
+data class Restaurant(
+    @SerializedName("r_id")
+    val id: Int,
+    @SerializedName("r_title")
+    val title: String,
+    @SerializedName("r_description")
+    val description: String,
+    var isFavorite: Boolean = false
+)
 
 val dummyRestaurants = listOf(
     Restaurant(0, "Alfredo foods", "At Alfredo's …"),
@@ -20,4 +29,4 @@ val dummyRestaurants = listOf(
     Restaurant(14, "Alfredo foods", "At Alfredo's …"),
     Restaurant(15, "Jay or Jim Shopping", ""),
     Restaurant(16, "Mike and Ben's food pub", "")
-    )
+)

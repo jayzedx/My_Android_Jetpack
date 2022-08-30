@@ -6,11 +6,51 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.tutorial.chapter1.myapplication.Model.Restaurant
 import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
+import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
-    fun getRestaurants() = dummyRestaurants
 
-    val state: MutableState<List<Restaurant>> = mutableStateOf(dummyRestaurants.restoreSelections())
+
+    private var restInterface: RestaurantsApiService
+    //val state: MutableState<List<Restaurant>> = mutableStateOf(dummyRestaurants.restoreSelections())
+    //fun getRestaurants() = dummyRestaurants
+
+    val state: MutableState<List<Restaurant>> = mutableStateOf(emptyList<Restaurant>())
+
+    init {
+        val retrofit: Retrofit = Retrofit.Builder()
+            //explicitly tell Retrofit that we want the JSON to be deserialized with the GSON converter, following the @Serialized
+            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl("https://restaurants-827eb-default-rtdb.firebaseio.com/")
+            .build()
+        restInterface = retrofit.create(RestaurantsApiService::class.java)
+    }
+
+    fun getRestaurants() {
+        // occurred error from executing from main thread
+        // because execute() will run synchronous on main thread
+        //        restInterface.getRestaurants().execute().body()?.let { restaurants ->
+        //            state.value = restaurants.restoreSelections()
+        //        }
+
+        restInterface.getRestaurants().enqueue(
+            object : Callback<List<Restaurant>> {
+                override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
+                    response.body()?.let { restaurants ->
+                        state.value = restaurants.restoreSelections()
+                    }
+                }
+                override fun onFailure(call: Call<List<Restaurant>>, t: Throwable) {
+                    t.printStackTrace()
+                }
+            })
+
+    }
 
     fun toggleFavorite(id: Int) {
         val restaurants = state.value.toMutableList()
