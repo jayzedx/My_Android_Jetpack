@@ -18,7 +18,7 @@ import java.net.ConnectException
 import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
-class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
+class RestaurantsViewModel() : ViewModel() {
 
 
     private var restInterface: RestaurantsApiService
@@ -89,23 +89,14 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             val restaurants = getRemoteRestaurants()
             //specific that works on main thread
             withContext(Dispatchers.Main) {
-                state.value = restaurants.restoreSelections()
+                state.value = getRemoteRestaurants()
             }
         }
     }
 
-    fun toggleFavorite(id: Int) {
-        val restaurants = state.value.toMutableList()
-        val itemIndex =
-            restaurants.indexOfFirst { it.id == id }
-        val item = restaurants[itemIndex]
-        restaurants[itemIndex] =
-            item.copy(isFavorite = !item.isFavorite)
-        storeSelection(restaurants[itemIndex])
-
-
+    fun toggleFavorite(id: Int, oldValue: Boolean) {
         viewModelScope.launch {
-            val updatedRestaurants = toggleFavoriteRestaurant(id, item.isFavorite)
+            val updatedRestaurants = toggleFavoriteRestaurant(id, oldValue)
             state.value = updatedRestaurants
         }
     }
@@ -121,29 +112,6 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             restaurantsDao.getAll()
         }
 
-    private fun storeSelection(item: Restaurant) {
-        val savedToggled = stateHandle
-            .get<List<Int>?>(FAVORITES)
-            .orEmpty().toMutableList()
-        if (item.isFavorite) savedToggled.add(item.id)
-        else savedToggled.remove(item.id)
-        stateHandle[FAVORITES] = savedToggled
-    }
-
-    private fun List<Restaurant>.restoreSelections(): List<Restaurant> {
-        stateHandle.get<List<Int>?>(FAVORITES)?.let { selectedIds ->
-            val restaurantsMap = this.associateBy { it.id }
-                .toMutableMap()// creating Map type variable with using id as key
-            selectedIds.forEach { id ->
-                val restaurant = restaurantsMap[id] ?: return@forEach
-                //copy() function), will be notified so that it can trigger recomposition
-                restaurantsMap[id] = restaurant.copy(isFavorite = true)
-            }
-            return restaurantsMap.values.toList()
-        }
-        return this //return original list
-    }
-
 
     override fun onCleared() {
         super.onCleared()
@@ -151,7 +119,4 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     }
 
 
-    companion object {
-        const val FAVORITES = "favorites"
-    }
 }
