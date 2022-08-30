@@ -5,15 +5,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.tutorial.chapter1.myapplication.Database.RestaurantDb
 import com.tutorial.chapter1.myapplication.Model.Restaurant
 import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
 import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
+import com.tutorial.chapter1.myapplication.RestaurantApplication
 import kotlinx.coroutines.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
+import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
+import java.net.ConnectException
+import java.net.UnknownHostException
 
 class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
 
@@ -33,8 +34,12 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         exception.printStackTrace()
     }
 
+    private var restaurantsDao = RestaurantDb
+        .getDaoInstance(RestaurantApplication.getAppContext())
 
-    init {
+
+
+                    init {
         val retrofit: Retrofit = Retrofit.Builder()
             //explicitly tell Retrofit that we want the JSON to be deserialized with the GSON converter, following the @Serialized
             .addConverterFactory(GsonConverterFactory.create())
@@ -48,7 +53,20 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
     private suspend fun getRemoteRestaurants() : List<Restaurant> {
         return withContext(Dispatchers.IO) {
-            restInterface.getRestaurants()
+            try {
+                val restaurants = restInterface.getRestaurants()
+                restaurantsDao.addAll(restaurants)
+                return@withContext restaurants
+            } catch (e: Exception) {
+                when (e) {
+                    is UnknownHostException,
+                    is ConnectException,
+                    is HttpException -> {
+                        return@withContext restaurantsDao.getAll()
+                    }
+                    else -> throw e
+                }
+            }
         }
     }
 
