@@ -17,6 +17,8 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
 
     private var restInterface: RestaurantsApiService
+    private lateinit var restaurantsCall: Call<List<Restaurant>>
+
     //val state: MutableState<List<Restaurant>> = mutableStateOf(dummyRestaurants.restoreSelections())
     //fun getRestaurants() = dummyRestaurants
 
@@ -37,8 +39,8 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         //        restInterface.getRestaurants().execute().body()?.let { restaurants ->
         //            state.value = restaurants.restoreSelections()
         //        }
-
-        restInterface.getRestaurants().enqueue(
+        restaurantsCall = restInterface.getRestaurants()
+        restaurantsCall.enqueue(
             object : Callback<List<Restaurant>> {
                 override fun onResponse(call: Call<List<Restaurant>>, response: Response<List<Restaurant>>) {
                     response.body()?.let { restaurants ->
@@ -81,6 +83,12 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             return restaurantsMap.values.toList()
         }
         return this //return original list
+    }
+
+
+    override fun onCleared() {
+        super.onCleared()
+        restaurantsCall.cancel()
     }
 
 
