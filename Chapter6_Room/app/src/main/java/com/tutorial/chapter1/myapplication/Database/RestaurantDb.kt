@@ -8,7 +8,7 @@ import com.tutorial.chapter1.myapplication.Model.Restaurant
 
 @Database(
     entities = [Restaurant::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class RestaurantDb : RoomDatabase() {

@@ -6,6 +6,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tutorial.chapter1.myapplication.Database.RestaurantDb
+import com.tutorial.chapter1.myapplication.Model.PartialRestaurant
 import com.tutorial.chapter1.myapplication.Model.Restaurant
 import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
 import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
@@ -14,6 +15,7 @@ import kotlinx.coroutines.*
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
 import java.net.ConnectException
+import java.net.SocketTimeoutException
 import java.net.UnknownHostException
 
 class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
@@ -59,6 +61,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
                 return@withContext restaurants
             } catch (e: Exception) {
                 when (e) {
+                    is SocketTimeoutException,
                     is UnknownHostException,
                     is ConnectException,
                     is HttpException -> {
@@ -89,7 +92,21 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             item.copy(isFavorite = !item.isFavorite)
         storeSelection(restaurants[itemIndex])
         state.value = restaurants
+
+        viewModelScope.launch {
+            toggleFavoriteRestaurant(id, item.isFavorite)
+        }
     }
+
+    private suspend fun toggleFavoriteRestaurant(id: Int, oldValue: Boolean) =
+        withContext(Dispatchers.IO) {
+            restaurantsDao.update(
+                PartialRestaurant(
+                    id = id,
+                    isFavorite = !oldValue
+                )
+            )
+        }
 
     private fun storeSelection(item: Restaurant) {
         val savedToggled = stateHandle
@@ -102,9 +119,12 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
     private fun List<Restaurant>.restoreSelections(): List<Restaurant> {
         stateHandle.get<List<Int>?>(FAVORITES)?.let { selectedIds ->
-            val restaurantsMap = this.associateBy { it.id } // creating Map type variable with using id as key
+            val restaurantsMap = this.associateBy { it.id }
+                .toMutableMap()// creating Map type variable with using id as key
             selectedIds.forEach { id ->
-                restaurantsMap[id]?.isFavorite = true
+                val restaurant = restaurantsMap[id] ?: return@forEach
+                //copy() function), will be notified so that it can trigger recomposition
+                restaurantsMap[id] = restaurant.copy(isFavorite = true)
             }
             return restaurantsMap.values.toList()
         }

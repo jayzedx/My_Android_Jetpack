@@ -20,7 +20,7 @@ data class Restaurant(
     val description: String,
 
     @ColumnInfo(name = "is_favorite")
-    var isFavorite: Boolean = false
+    val isFavorite: Boolean = false
 )
 
 val dummyRestaurants = listOf(
