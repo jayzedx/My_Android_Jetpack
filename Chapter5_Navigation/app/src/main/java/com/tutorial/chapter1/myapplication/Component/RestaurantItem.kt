@@ -1,5 +1,6 @@
 package com.tutorial.chapter1.myapplication.Component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
@@ -17,7 +18,7 @@ import com.tutorial.chapter1.myapplication.Model.Restaurant
 
 
 @Composable
-fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
+fun RestaurantItem(item: Restaurant, onFavoriteClick: (id: Int) -> Unit, onItemClick: (id: Int) -> Unit) {
 
     val icon = if (item.isFavorite)
         Icons.Filled.Favorite
@@ -27,7 +28,9 @@ fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
 
     Card(
         elevation = 8.dp,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable { onItemClick(item.id) }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -41,7 +44,7 @@ fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
 
             //FavoriteIcon(Modifier.weight(0.15f))
             RestaurantIcon(icon, Modifier.weight(0.15f)) {
-                onClick(item.id)
+                onFavoriteClick(item.id)
             }
         }
     }

@@ -18,7 +18,7 @@ import com.tutorial.chapter1.myapplication.ViewModel.RestaurantsViewModel
 import com.tutorial.chapter1.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
-fun RestaurantScreen() {
+fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
     //    Column(Modifier.verticalScroll(rememberScrollState())) {
     //        dummyRestaurants.forEach { item ->
     //            RestaurantItem(item)
@@ -34,9 +34,14 @@ fun RestaurantScreen() {
 
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         items(viewModel.state.value) { restaurant ->
-            RestaurantItem(restaurant) { id ->
-                viewModel.toggleFavorite(id)
-            }
+            RestaurantItem(restaurant,
+                onFavoriteClick = { id ->
+                    viewModel.toggleFavorite(id)
+                },
+                onItemClick = { id ->
+                    onItemClick(id)
+                },
+            )
         }
     }
 }
