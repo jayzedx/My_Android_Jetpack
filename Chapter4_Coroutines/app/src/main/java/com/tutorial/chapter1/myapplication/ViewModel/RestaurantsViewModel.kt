@@ -4,6 +4,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.tutorial.chapter1.myapplication.Model.Restaurant
 import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
 import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
@@ -28,6 +29,10 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     //coroutines, async with io thread
     val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.IO)
+    private val errorHandler = CoroutineExceptionHandler { _, exception ->
+        exception.printStackTrace()
+    }
+
 
     init {
         val retrofit: Retrofit = Retrofit.Builder()
@@ -42,12 +47,12 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     }
 
     fun getRestaurants() {
-       scope.launch {
-           val restaurants = restInterface.getRestaurants()
-           //specific that works on main thread
-           withContext(Dispatchers.Main) {
-               state.value = restaurants.restoreSelections()
-           }
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
+            val restaurants = restInterface.getRestaurants()
+            //specific that works on main thread
+            withContext(Dispatchers.Main) {
+                state.value = restaurants.restoreSelections()
+            }
         }
     }
 
