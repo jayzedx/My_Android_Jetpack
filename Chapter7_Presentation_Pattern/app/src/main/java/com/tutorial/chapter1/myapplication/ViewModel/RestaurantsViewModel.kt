@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.tutorial.chapter1.myapplication.Database.RestaurantDb
 import com.tutorial.chapter1.myapplication.Model.PartialRestaurant
 import com.tutorial.chapter1.myapplication.Model.Restaurant
+import com.tutorial.chapter1.myapplication.Model.RestaurantScreenState
 import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
 import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
 import com.tutorial.chapter1.myapplication.RestaurantApplication
@@ -27,13 +28,19 @@ class RestaurantsViewModel() : ViewModel() {
     //val state: MutableState<List<Restaurant>> = mutableStateOf(dummyRestaurants.restoreSelections())
     //fun getRestaurants() = dummyRestaurants
 
-    val state: MutableState<List<Restaurant>> = mutableStateOf(emptyList<Restaurant>())
+    val state: MutableState<RestaurantScreenState> = mutableStateOf(
+        RestaurantScreenState(restaurants = listOf(),isLoading = true)
+    )
 
     //coroutines, async with io thread
     val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.IO)
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
         exception.printStackTrace()
+        state.value = state.value.copy(
+            error = exception.message,
+            isLoading = false
+        )
     }
 
     private var restaurantsDao = RestaurantDb
@@ -88,7 +95,9 @@ class RestaurantsViewModel() : ViewModel() {
             val restaurants = getRemoteRestaurants()
             //specific that works on main thread
             withContext(Dispatchers.Main) {
-                state.value = getRemoteRestaurants()
+                state.value = state.value.copy(
+                    restaurants = restaurants,
+                    isLoading = false)
             }
         }
     }
@@ -96,7 +105,7 @@ class RestaurantsViewModel() : ViewModel() {
     fun toggleFavorite(id: Int, oldValue: Boolean) {
         viewModelScope.launch {
             val updatedRestaurants = toggleFavoriteRestaurant(id, oldValue)
-            state.value = updatedRestaurants
+            state.value = state.value.copy(restaurants = updatedRestaurants)
         }
     }
 

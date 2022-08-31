@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,8 +31,7 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
     //    }
 
     val viewModel: RestaurantsViewModel = viewModel()
-    val restaurants = viewModel.state.value
-    val isLoading = restaurants.isEmpty()
+    val state = viewModel.state.value
 
     //triggering network requests for preventing side effect from recomposition
     LaunchedEffect(key1 = "request_restaurants") {
@@ -41,7 +41,7 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
         modifier = Modifier.fillMaxSize()) {
 
         LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-            items(restaurants) { restaurant ->
+            items(state.restaurants) { restaurant ->
                 RestaurantItem(restaurant,
                     onFavoriteClick = { id, oldValue ->
                         viewModel.toggleFavorite(id, oldValue)
@@ -53,8 +53,10 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
             }
         }
 
-        if(isLoading)
+        if(state.isLoading)
             CircularProgressIndicator()
+        if (state.error != null)
+            Text(state.error)
     }
 }
 
