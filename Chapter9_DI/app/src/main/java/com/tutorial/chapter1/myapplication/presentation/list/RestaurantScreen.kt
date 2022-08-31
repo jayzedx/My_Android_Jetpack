@@ -1,4 +1,4 @@
-package com.tutorial.chapter1.myapplication.Screen
+package com.tutorial.chapter1.myapplication.presentation.list
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues

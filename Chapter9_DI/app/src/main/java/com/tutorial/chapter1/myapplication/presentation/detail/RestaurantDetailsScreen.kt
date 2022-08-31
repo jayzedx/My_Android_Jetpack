@@ -1,4 +1,4 @@
-package com.tutorial.chapter1.myapplication.Screen
+package com.tutorial.chapter1.myapplication.presentation.detail
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

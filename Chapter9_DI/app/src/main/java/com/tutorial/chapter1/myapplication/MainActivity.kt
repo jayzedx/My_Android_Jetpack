@@ -17,8 +17,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.tutorial.chapter1.myapplication.Screen.RestaurantDetailsScreen
-import com.tutorial.chapter1.myapplication.Screen.RestaurantScreen
+import com.tutorial.chapter1.myapplication.presentation.detail.RestaurantDetailsScreen
+import com.tutorial.chapter1.myapplication.presentation.list.RestaurantScreen
+
 import com.tutorial.chapter1.myapplication.presentation.list.RestaurantScreenState
 import com.tutorial.chapter1.myapplication.presentation.list.RestaurantsViewModel
 import com.tutorial.chapter1.myapplication.ui.theme.MyApplicationTheme
