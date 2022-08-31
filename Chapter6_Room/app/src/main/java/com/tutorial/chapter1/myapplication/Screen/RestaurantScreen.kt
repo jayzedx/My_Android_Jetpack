@@ -35,8 +35,8 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         items(viewModel.state.value) { restaurant ->
             RestaurantItem(restaurant,
-                onFavoriteClick = { id ->
-                    viewModel.toggleFavorite(id)
+                onFavoriteClick = { id, oldValue ->
+                    viewModel.toggleFavorite(id, oldValue)
                 },
                 onItemClick = { id ->
                     onItemClick(id)
