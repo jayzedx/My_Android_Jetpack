@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -23,7 +24,9 @@ import com.tutorial.chapter1.myapplication.presentation.list.RestaurantScreen
 import com.tutorial.chapter1.myapplication.presentation.list.RestaurantScreenState
 import com.tutorial.chapter1.myapplication.presentation.list.RestaurantsViewModel
 import com.tutorial.chapter1.myapplication.ui.theme.MyApplicationTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,11 +45,10 @@ private fun RestaurantsApp() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "restaurants") {
         composable(route = "restaurants") {
-            val viewModel: RestaurantsViewModel = viewModel()
+            val viewModel: RestaurantsViewModel = hiltViewModel()
             RestaurantScreen(state = viewModel.state.value,
                 onItemClick = { id ->
-                    navController
-                        .navigate("restaurants/$id")
+                    navController.navigate("restaurants/$id")
                 },
                 onFavoriteClick = { id, oldValue ->
                     viewModel.toggleFavorite(id, oldValue)
