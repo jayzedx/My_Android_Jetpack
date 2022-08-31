@@ -11,9 +11,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.tutorial.chapter1.myapplication.Component.RestaurantDetails
-import com.tutorial.chapter1.myapplication.Component.RestaurantIcon
-import com.tutorial.chapter1.myapplication.ViewModel.RestaurantDetailsViewModel
+import com.tutorial.chapter1.myapplication.component.RestaurantDetails
+import com.tutorial.chapter1.myapplication.component.RestaurantIcon
+import com.tutorial.chapter1.myapplication.presentation.detail.RestaurantDetailsViewModel
 
 @Composable
 fun RestaurantDetailsScreen() {

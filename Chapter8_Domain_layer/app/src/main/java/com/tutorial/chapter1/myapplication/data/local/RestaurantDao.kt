@@ -1,8 +1,7 @@
-package com.tutorial.chapter1.myapplication.Database
+package com.tutorial.chapter1.myapplication.data.local
 
 import androidx.room.*
-import com.tutorial.chapter1.myapplication.Model.PartialRestaurant
-import com.tutorial.chapter1.myapplication.Model.Restaurant
+import com.tutorial.chapter1.myapplication.domain.Restaurant
 
 @Dao
 interface RestaurantDao {

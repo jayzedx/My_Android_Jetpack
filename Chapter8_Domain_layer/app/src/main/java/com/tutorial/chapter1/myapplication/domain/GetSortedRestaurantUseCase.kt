@@ -1,7 +1,6 @@
-package com.tutorial.chapter1.myapplication.UseCase
+package com.tutorial.chapter1.myapplication.domain
 
-import com.tutorial.chapter1.myapplication.Model.Restaurant
-import com.tutorial.chapter1.myapplication.Network.RestaurantRepository
+import com.tutorial.chapter1.myapplication.data.remote.RestaurantRepository
 
 class GetSortedRestaurantUseCase {
     private val repository: RestaurantRepository = RestaurantRepository()

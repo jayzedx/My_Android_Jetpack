@@ -1,6 +1,6 @@
-package com.tutorial.chapter1.myapplication.Network
+package com.tutorial.chapter1.myapplication.data.remote
 
-import com.tutorial.chapter1.myapplication.Model.Restaurant
+import com.tutorial.chapter1.myapplication.domain.Restaurant
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.GET

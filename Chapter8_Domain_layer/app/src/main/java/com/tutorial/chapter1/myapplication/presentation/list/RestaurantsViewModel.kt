@@ -1,27 +1,16 @@
-package com.tutorial.chapter1.myapplication.ViewModel
+package com.tutorial.chapter1.myapplication.presentation.list
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tutorial.chapter1.myapplication.Database.RestaurantDb
-import com.tutorial.chapter1.myapplication.Model.PartialRestaurant
-import com.tutorial.chapter1.myapplication.Model.Restaurant
-import com.tutorial.chapter1.myapplication.Model.RestaurantScreenState
-import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
-import com.tutorial.chapter1.myapplication.Network.RestaurantRepository
-import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
+import com.tutorial.chapter1.myapplication.data.local.RestaurantDb
+import com.tutorial.chapter1.myapplication.data.remote.RestaurantRepository
 import com.tutorial.chapter1.myapplication.RestaurantApplication
-import com.tutorial.chapter1.myapplication.UseCase.GetRestaurantUseCase
-import com.tutorial.chapter1.myapplication.UseCase.ToggleRestaurantUseCase
+import com.tutorial.chapter1.myapplication.domain.GetRestaurantUseCase
+import com.tutorial.chapter1.myapplication.domain.ToggleRestaurantUseCase
 import kotlinx.coroutines.*
-import retrofit2.*
-import retrofit2.converter.gson.GsonConverterFactory
-import java.net.ConnectException
-import java.net.SocketTimeoutException
-import java.net.UnknownHostException
 
 class RestaurantsViewModel() : ViewModel() {
 

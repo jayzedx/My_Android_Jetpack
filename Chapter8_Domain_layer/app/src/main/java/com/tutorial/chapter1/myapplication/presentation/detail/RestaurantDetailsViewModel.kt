@@ -1,11 +1,11 @@
-package com.tutorial.chapter1.myapplication.ViewModel
+package com.tutorial.chapter1.myapplication.presentation.detail
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.tutorial.chapter1.myapplication.Model.Restaurant
-import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
+import com.tutorial.chapter1.myapplication.data.remote.RestaurantsApiService
+import com.tutorial.chapter1.myapplication.domain.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

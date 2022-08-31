@@ -1,4 +1,4 @@
-package com.tutorial.chapter1.myapplication.Model
+package com.tutorial.chapter1.myapplication.domain
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey

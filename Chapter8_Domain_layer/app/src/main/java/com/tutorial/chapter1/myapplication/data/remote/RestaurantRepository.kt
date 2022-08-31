@@ -1,9 +1,9 @@
-package com.tutorial.chapter1.myapplication.Network
+package com.tutorial.chapter1.myapplication.data.remote
 
-import com.tutorial.chapter1.myapplication.Database.RestaurantDb
-import com.tutorial.chapter1.myapplication.Model.PartialRestaurant
-import com.tutorial.chapter1.myapplication.Model.Restaurant
+import com.tutorial.chapter1.myapplication.data.local.RestaurantDb
+import com.tutorial.chapter1.myapplication.data.local.PartialRestaurant
 import com.tutorial.chapter1.myapplication.RestaurantApplication
+import com.tutorial.chapter1.myapplication.domain.Restaurant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
