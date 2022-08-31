@@ -14,8 +14,6 @@ import com.tutorial.chapter1.myapplication.Model.dummyRestaurants
 import com.tutorial.chapter1.myapplication.Network.RestaurantRepository
 import com.tutorial.chapter1.myapplication.Network.RestaurantsApiService
 import com.tutorial.chapter1.myapplication.RestaurantApplication
-import com.tutorial.chapter1.myapplication.UseCase.GetRestaurantUseCase
-import com.tutorial.chapter1.myapplication.UseCase.ToggleRestaurantUseCase
 import kotlinx.coroutines.*
 import retrofit2.*
 import retrofit2.converter.gson.GsonConverterFactory
@@ -50,8 +48,6 @@ class RestaurantsViewModel() : ViewModel() {
     private var restaurantsDao = RestaurantDb
         .getDaoInstance(RestaurantApplication.getAppContext())
 
-    private val getRestaurantsUseCase = GetRestaurantUseCase()
-    private val toggleRestaurantsUseCase = ToggleRestaurantUseCase()
 
     init {
         //triggering network requests for preventing side effect from recomposition (alternative)
@@ -61,7 +57,7 @@ class RestaurantsViewModel() : ViewModel() {
 
     fun getRestaurants() {
         viewModelScope.launch(errorHandler) {
-            val restaurants = getRestaurantsUseCase()
+            val restaurants = repository.getRemoteRestaurants()
             //specific that works on main thread
             withContext(Dispatchers.Main) {
                 _state.value = _state.value.copy(
@@ -73,7 +69,7 @@ class RestaurantsViewModel() : ViewModel() {
 
     fun toggleFavorite(id: Int, oldValue: Boolean) {
         viewModelScope.launch {
-            val updatedRestaurants = toggleRestaurantsUseCase(id, oldValue)
+            val updatedRestaurants = repository.toggleFavoriteRestaurant(id, oldValue)
             _state.value = _state.value.copy(restaurants = updatedRestaurants)
         }
     }
