@@ -44,7 +44,7 @@ class RestaurantsViewModel() : ViewModel() {
 
     init {
         //triggering network requests for preventing side effect from recomposition (alternative)
-        //getRestaurants()
+        getRestaurants()
     }
 
 

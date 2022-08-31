@@ -14,24 +14,22 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.tutorial.chapter1.myapplication.component.RestaurantItem
-import com.tutorial.chapter1.myapplication.presentation.list.RestaurantsViewModel
+import com.tutorial.chapter1.myapplication.presentation.list.RestaurantScreenState
 import com.tutorial.chapter1.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
-fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
-    //    Column(Modifier.verticalScroll(rememberScrollState())) {
-    //        dummyRestaurants.forEach { item ->
-    //            RestaurantItem(item)
-    //        }
-    //    }
+fun RestaurantScreen(state: RestaurantScreenState,
+                     onItemClick: (id: Int) -> Unit = {},
+                     onFavoriteClick: (id: Int, oldValue: Boolean) -> Unit) {
 
+    /*
     val viewModel: RestaurantsViewModel = viewModel()
-    val state = viewModel.state.value
-
     //triggering network requests for preventing side effect from recomposition
     LaunchedEffect(key1 = "request_restaurants") {
         viewModel.getRestaurants()
     }
+    */
+
     Box(contentAlignment = Alignment.Center,
         modifier = Modifier.fillMaxSize()) {
 
@@ -39,7 +37,7 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
             items(state.restaurants) { restaurant ->
                 RestaurantItem(restaurant,
                     onFavoriteClick = { id, oldValue ->
-                        viewModel.toggleFavorite(id, oldValue)
+                        onFavoriteClick(id, oldValue)
                     },
                     onItemClick = { id ->
                         onItemClick(id)
@@ -59,6 +57,10 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
 @Composable
 fun DefaultPreview() {
     MyApplicationTheme {
-        RestaurantScreen()
+        RestaurantScreen(
+            RestaurantScreenState(listOf(), true),
+            {},
+            { _, _ -> }
+        )
     }
 }
