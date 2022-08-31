@@ -1,12 +1,16 @@
 package com.tutorial.chapter1.myapplication.Screen
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,23 +30,31 @@ fun RestaurantScreen(onItemClick: (id: Int) -> Unit = {}) {
     //    }
 
     val viewModel: RestaurantsViewModel = viewModel()
+    val restaurants = viewModel.state.value
+    val isLoading = restaurants.isEmpty()
 
     //triggering network requests for preventing side effect from recomposition
     LaunchedEffect(key1 = "request_restaurants") {
         viewModel.getRestaurants()
     }
+    Box(contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxSize()) {
 
-    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-        items(viewModel.state.value) { restaurant ->
-            RestaurantItem(restaurant,
-                onFavoriteClick = { id, oldValue ->
-                    viewModel.toggleFavorite(id, oldValue)
-                },
-                onItemClick = { id ->
-                    onItemClick(id)
-                },
-            )
+        LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
+            items(restaurants) { restaurant ->
+                RestaurantItem(restaurant,
+                    onFavoriteClick = { id, oldValue ->
+                        viewModel.toggleFavorite(id, oldValue)
+                    },
+                    onItemClick = { id ->
+                        onItemClick(id)
+                    },
+                )
+            }
         }
+
+        if(isLoading)
+            CircularProgressIndicator()
     }
 }
 
