@@ -40,8 +40,7 @@ class RestaurantsViewModel() : ViewModel() {
         .getDaoInstance(RestaurantApplication.getAppContext())
 
 
-
-                    init {
+    init {
         val retrofit: Retrofit = Retrofit.Builder()
             //explicitly tell Retrofit that we want the JSON to be deserialized with the GSON converter, following the @Serialized
             .addConverterFactory(GsonConverterFactory.create())
