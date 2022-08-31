@@ -10,7 +10,8 @@ class ToggleRestaurantUseCase {
         oldValue: Boolean
     ): List<Restaurant> {
         val newFav = oldValue.not()
-        val updateRestaurant = repository.toggleFavoriteRestaurant(id, newFav)
-        return GetRestaurantUseCase().invoke()
+        repository.toggleFavoriteRestaurant(id, newFav)
+        // don't need to call api again
+        return GetSortedRestaurantUseCase().invoke()
     }
 }

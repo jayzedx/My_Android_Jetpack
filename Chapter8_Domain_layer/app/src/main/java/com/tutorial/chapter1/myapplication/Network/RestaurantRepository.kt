@@ -33,10 +33,9 @@ class RestaurantRepository {
                     isFavorite = value
                 )
             )
-            //restaurantsDao.getAll()
         }
 
-    suspend fun getRemoteRestaurants() : List<Restaurant> {
+    suspend fun loadRestaurants() : List<Restaurant> {
         return withContext(Dispatchers.IO) {
             try {
                 refreshCache()
@@ -65,5 +64,11 @@ class RestaurantRepository {
             favoriteRestaurants.map {
                 PartialRestaurant(it.id, true)
             })
+    }
+
+    suspend fun getRestaurants() : List<Restaurant> {
+        return withContext(Dispatchers.IO) {
+            return@withContext restaurantsDao.getAll()
+        }
     }
 }
