@@ -1,6 +1,7 @@
 package com.tutorial.chapter1.myapplication.ViewModel
 
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -27,16 +28,18 @@ class RestaurantsViewModel() : ViewModel() {
     //val state: MutableState<List<Restaurant>> = mutableStateOf(dummyRestaurants.restoreSelections())
     //fun getRestaurants() = dummyRestaurants
 
-    val state: MutableState<RestaurantScreenState> = mutableStateOf(
+    private val _state: MutableState<RestaurantScreenState> = mutableStateOf(
         RestaurantScreenState(restaurants = listOf(),isLoading = true)
     )
+    val state: State<RestaurantScreenState>
+        get() = _state
 
     //coroutines, async with io thread
     val job = Job()
     private val scope = CoroutineScope(job + Dispatchers.IO)
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
         exception.printStackTrace()
-        state.value = state.value.copy(
+        _state.value = _state.value.copy(
             error = exception.message,
             isLoading = false
         )
@@ -57,7 +60,7 @@ class RestaurantsViewModel() : ViewModel() {
             val restaurants = repository.getRemoteRestaurants()
             //specific that works on main thread
             withContext(Dispatchers.Main) {
-                state.value = state.value.copy(
+                _state.value = _state.value.copy(
                     restaurants = restaurants,
                     isLoading = false)
             }
@@ -67,7 +70,7 @@ class RestaurantsViewModel() : ViewModel() {
     fun toggleFavorite(id: Int, oldValue: Boolean) {
         viewModelScope.launch {
             val updatedRestaurants = repository.toggleFavoriteRestaurant(id, oldValue)
-            state.value = state.value.copy(restaurants = updatedRestaurants)
+            _state.value = _state.value.copy(restaurants = updatedRestaurants)
         }
     }
 
