@@ -1,10 +1,10 @@
-package com.tutorial.chapter1.myapplication.Model
+package com.tutorial.chapter1.myapplication.data.local
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 
 @Entity
-data class PartialRestaurant(
+data class PartialLocalRestaurant(
     @ColumnInfo(name = "r_id")
     val id: Int,
 

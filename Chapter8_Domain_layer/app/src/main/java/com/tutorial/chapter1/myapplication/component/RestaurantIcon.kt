@@ -1,4 +1,4 @@
-package com.tutorial.chapter1.myapplication.Component
+package com.tutorial.chapter1.myapplication.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable

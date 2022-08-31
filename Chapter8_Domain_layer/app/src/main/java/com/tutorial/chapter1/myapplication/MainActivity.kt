@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +19,8 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import com.tutorial.chapter1.myapplication.Screen.RestaurantDetailsScreen
 import com.tutorial.chapter1.myapplication.Screen.RestaurantScreen
+import com.tutorial.chapter1.myapplication.presentation.list.RestaurantScreenState
+import com.tutorial.chapter1.myapplication.presentation.list.RestaurantsViewModel
 import com.tutorial.chapter1.myapplication.ui.theme.MyApplicationTheme
 
 class MainActivity : ComponentActivity() {
@@ -38,15 +41,21 @@ private fun RestaurantsApp() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "restaurants") {
         composable(route = "restaurants") {
-            RestaurantScreen { id ->
-                navController.navigate("restaurants/$id")
-            }
+            val viewModel: RestaurantsViewModel = viewModel()
+            RestaurantScreen(state = viewModel.state.value,
+                onItemClick = { id ->
+                    navController
+                        .navigate("restaurants/$id")
+                },
+                onFavoriteClick = { id, oldValue ->
+                    viewModel.toggleFavorite(id, oldValue)
+                })
         }
         composable(
             route = "restaurants/{restaurant_id}",
             arguments = listOf(navArgument("restaurant_id") {
                 type = NavType.IntType
-             }),
+            }),
             deepLinks = listOf(navDeepLink {
                 uriPattern = "www.restaurantsapp.details.com/{restaurant_id}"
             })) { navStackEntry ->
@@ -66,6 +75,10 @@ fun Greeting(name: String) {
 @Composable
 fun DefaultPreview() {
     MyApplicationTheme {
-        RestaurantScreen()
+        RestaurantScreen(
+            RestaurantScreenState(listOf(), true),
+            {},
+            { _, _ -> }
+        )
     }
 }

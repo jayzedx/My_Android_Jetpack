@@ -1,6 +1,6 @@
-package com.tutorial.chapter1.myapplication.Network
+package com.tutorial.chapter1.myapplication.data.remote
 
-import com.tutorial.chapter1.myapplication.Model.Restaurant
+import com.tutorial.chapter1.myapplication.domain.Restaurant
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.GET
@@ -10,10 +10,10 @@ import retrofit2.http.Query
 interface RestaurantsApiService {
     @GET("restaurants.json")
 //  use coroutines instead of callbacks
-    suspend fun getRestaurants() : List<Restaurant>
+    suspend fun getRestaurants() : List<RemoteRestaurant>
 
     @GET("restaurants.json?orderBy=\"r_id\"")
-    suspend fun getRestaurant(@Query("equalTo") id: Int): Map<String, Restaurant>
+    suspend fun getRestaurant(@Query("equalTo") id: Int): Map<String, RemoteRestaurant>
 
 //    @POST("user/edit")
 //    fun updateUser(@Field("first_name") firstName: String): Call<User>

@@ -1,4 +1,4 @@
-package com.tutorial.chapter1.myapplication.Component
+package com.tutorial.chapter1.myapplication.component
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
@@ -9,12 +9,10 @@ import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Place
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.tutorial.chapter1.myapplication.Model.Restaurant
+import com.tutorial.chapter1.myapplication.domain.Restaurant
 
 
 @Composable

@@ -1,13 +1,13 @@
-package com.tutorial.chapter1.myapplication.Database
+package com.tutorial.chapter1.myapplication.data.local
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.tutorial.chapter1.myapplication.Model.Restaurant
+
 
 @Database(
-    entities = [Restaurant::class],
+    entities = [LocalRestaurant::class],
     version = 2,
     exportSchema = false
 )

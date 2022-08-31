@@ -1,4 +1,4 @@
-package com.tutorial.chapter1.myapplication.Component
+package com.tutorial.chapter1.myapplication.component
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.ContentAlpha
@@ -9,9 +9,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.tutorial.chapter1.myapplication.Screen.RestaurantScreen
-import com.tutorial.chapter1.myapplication.ui.theme.MyApplicationTheme
 
 @Composable
 fun RestaurantDetails(
